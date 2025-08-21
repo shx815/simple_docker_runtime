@@ -103,9 +103,9 @@ curl -X POST "http://localhost:8000/reset"
 ```json
 {
   "action": {
-    "action": "action_type",           // 动作类型：run(命令执行)、run_ipython(Python代码)、read(文件读取)、write(文件写入)、edit(文件编辑)
-    "args": {                          // 动作参数，根据动作类型不同而不同
-      "command": "ls -la",            // 命令执行：要执行的bash命令
+    "action": "action_type",          // 动作类型：run(命令执行)、run_ipython(Python代码)、read(文件读取)、write(文件写入)、edit(文件编辑)
+    "args": {                         // 动作参数，根据动作类型不同而不同
+      "command": "pwd",               // 命令执行：要执行的bash命令
       "code": "print('Hello')",       // Python执行：要执行的Python代码
       "path": "/path/to/file",        // 文件操作：文件路径
       "content": "file content",      // 文件写入/编辑：文件内容
@@ -119,6 +119,46 @@ curl -X POST "http://localhost:8000/reset"
   }
 }
 ```
+
+**标准响应格式 (Observation)：**
+
+系统支持多种响应类型，所有响应都使用统一的JSON结构，与action格式保持一致：
+
+```json
+{
+  "observation": "observation_type",  // 响应类型：run(命令执行)、run_ipython(Python代码)、read(文件读取)、write(文件写入)、edit(文件编辑)
+  "args": {                           // 统一参数结构，包含所有相关字段
+    "content": "响应内容",             // 响应的主要内容（命令输出、文件内容、操作结果等）
+    "command": "执行的命令",           // 命令执行：实际执行的bash命令
+    "hidden": false,                  // 命令执行：是否隐藏输出
+    "metadata": {                     // 命令执行：命令执行元数据
+      "exit_code": 0,                 // 命令退出码（0表示成功）
+      "pid": -1,                      // 进程ID
+      "username": "用户名",            // 执行命令的用户名
+      "hostname": "主机名",            // 主机名
+      "working_dir": "工作目录",       // 命令执行时的工作目录
+      "py_interpreter_path": "Python解释器路径", // Python解释器路径
+      "prefix": "",                   // 输出前缀
+      "suffix": "\n[Command completed with exit code 0.]" // 输出后缀
+    },
+    "code": "执行的Python代码",       // Python执行：要执行的Python代码
+    "image_urls": ["图片URL1", "图片URL2"], // Python执行：生成的图片URL列表（如matplotlib图表）
+    "path": "文件路径",                // 文件操作：文件路径
+    "old_content": "旧内容",           // 文件编辑：编辑前的旧内容
+    "new_content": "新内容",           // 文件编辑：编辑后的新内容
+    "prev_exist": false,              // 文件编辑：文件之前是否存在
+    "impl_source": "DEFAULT",         // 文件操作：实现来源
+    "diff": "diff内容",               // 文件编辑：差异内容
+    "error_id": "错误ID"              // 错误响应：错误标识符
+  }
+}
+```
+
+**说明：**
+- 所有observation响应都使用统一的`args`结构
+- 根据不同的observation类型，`args`中会包含相应的字段
+- 字段含义与具体操作类型相关，未使用的字段不会出现在响应中
+- 这种统一格式便于客户端处理，与action的格式保持一致
 
 **1. Bash 命令执行**
 ```bash
