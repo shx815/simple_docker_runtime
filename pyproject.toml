@@ -1,0 +1,43 @@
+[tool.poetry]
+name = "simple-docker-runtime"
+version = "0.1.0"
+description = "Simple Docker Runtime Application"
+authors = ["Your Name <your.email@example.com>"]
+readme = "README.md"
+packages = [{ include = "simplerun" }]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "0.104.1"
+uvicorn = {extras = ["standard"], version = "0.24.0"}
+pydantic = "^2.11.3"
+libtmux = "^0.37,<0.40"
+python-multipart = "0.0.6"
+bashlex = "0.18"
+psutil = "5.9.6"
+requests = "^2.32.3"
+python-json-logger = "3.3.0"
+termcolor = "3.1.0"
+tornado = "^6.0.0"
+tenacity = "^8.0.0"
+jupyter-kernel-gateway = "^2.5.2"
+ipykernel = "^6.29.5"
+openai = "^1.0.0"
+pypdf = "^4.0.0"
+python-docx = "^1.0.0"
+python-pptx = "^0.6.0"
+pylatexenc = "^2.0.0"
+opencv-python = "^4.8.0"
+reportlab = "^4.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "7.4.3"
+pytest-asyncio = "0.21.1"
+httpx = "0.25.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+start = "simplerun.main:main"
